@@ -1,4 +1,13 @@
 // Oct. 29, 2023
+********************************************************************
+* To be consistent with the Data Task instruction, I started with secion 2. 
+
+* Theis code file has 3 parts:
+* - Part 2 Data Cleaning
+* - Part 3 Analyze
+* - Part 4 Analyze
+
+************************Part 2 Data Cleaning***********************
 clear all
 set more off 
 cap log close 
