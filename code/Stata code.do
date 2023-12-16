@@ -75,6 +75,8 @@ coefplot interaction* if year != 1976, drop(interaction76) ciopts(recast(rcap))
 
 
 //coefplot
-coefplot all_no_control all individual_no_control individual firm_no_control firm, drop(_cons bench_size term_length binding_commission partisan_election retention mand_retirement) xline(0) ci
+reg log_length_stay i.phys_id pred_lnlos, r
+coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for pred_los") baselevels ci vertical label xlabel(, angle(45) labsize(vsmall)) yline(0)
+graph export "$Out\Coef_phys_control.png", replace
 
 log  close
