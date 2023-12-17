@@ -1,0 +1,15 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\huhu\Desktop\Project-template\code\markdown.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}17 Dec 2023, 02:09:46
+{txt}
+{com}. //_1
+. clear all
+{res}{txt}
+{com}. set more off 
+{txt}
+{com}. cap log close 
+{smcl}
+{com}{sf}{ul off}
