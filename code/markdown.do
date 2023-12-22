@@ -8,7 +8,7 @@ set maxvar 20000
 set scheme cleanplots, perm
 
 // If the reader wants to replicate the results, he/she just needs to change this global path and put the data in raw_data file. 
-global path "C:\Users\huhu\Desktop\Code Task\David Chan Data Task\"
+global path "C:\Users\huhu\Desktop\Code Task\XXX\"
 global D    "$path\data"      //data file
 global Out  "$path\out"       //result: graph and table
 cd "$D"                       //set current working directory

@@ -37,9 +37,8 @@ set more off
 set maxvar 20000
 set scheme cleanplots, perm
 
-// If the reader wants to replicate the results, he/she just needs to change
-// this global path and put the data in raw_data file. 
-global path "C:\Users\huhu\Desktop\Code Task\David Chan Data Task\"
+// If the reader wants to replicate the results, he/she just needs to change this global path and put the data in raw_data file. 
+global path "C:\Users\huhu\Desktop\Code Task\XXX\"
 global D    "$path\data"      //data file
 global Out  "$path\out"       //result: graph and table
 cd "$D"                       //set current working directory
@@ -179,14 +178,14 @@ qui graph export "$Out\Coef_Hours.png", replace
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/David Chan Data Task/out/Average_Severity.png}
+  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/XXX/out/Average_Severity.png}
   \caption{Average Severity by Half-Hour of Patient Arrival}
   \label{}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/David Chan Data Task/out/Coef_Hours.png}
+  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/XXX/out/Coef_Hours.png}
   \caption{Coefficient of Arrival Hours}
   \label{}
 \end{figure}
@@ -277,7 +276,7 @@ qui graph export "$Out\Census_Variation.png", replace
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/David Chan Data Task/out/Census_Variation.png}
+  \includegraphics[width=0.9\textwidth]{C:\Users\huhu\Desktop\Code Task\XXX\out\Census_Variation.png}
   \caption{Census Variation Relative to End of Shift}
   \label{}
 \end{figure}
@@ -320,14 +319,14 @@ qui graph export "$Out\Interaction_coef.png", replace
 ```
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/David Chan Data Task/out/Coef_phys.png}
+  \includegraphics[width=0.9\textwidth]{C:\Users\huhu\Desktop\Code Task\XXX\out\Coef_phys.png}
   \caption{Coefficient of Physician}
   \label{}
 \end{figure}
 
 \begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.9\textwidth]{C:/Users/huhu/Desktop/Code Task/David Chan Data Task/out/Coef_phys_control.png}
+  \includegraphics[width=0.9\textwidth]{C:\Users\huhu\Desktop\Code Task\XXX\out\Coef_phys_control.png}
   \caption{Coefficient of Physician, Controlled for pred\_los}
   \label{}
 \end{figure}
