@@ -1,0 +1,19 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/huhu/Desktop/Project-template/Stata Project Template/logs\task 1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 8 Jan 2024, 15:50:42
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\huhu\AppData\Local\Temp\STD4d60_000000.tmp"
+{txt}
+{com}. sysuse auto,clear
+{txt}(1978 automobile data)
+
+{com}. 
+{txt}end of do-file
+
+{com}. 
