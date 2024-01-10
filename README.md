@@ -6,3 +6,4 @@ This is a project template including:
 - etc.
 
 Stata Lab Code Forked from Wang Yi <https://wylilcarol.github.io/>
+Some Stata Scripts and ados Forked from @Sean Higgins
