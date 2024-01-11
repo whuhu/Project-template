@@ -58,6 +58,17 @@ duplicates report race married occupation
 duplicates tag race married occupation, gen(rm_dtag)
 duplicates drop race married occupation, force
 
+// missing values
+misstable summarize
+drop if missing(grade,indus,occup,union,hours,tenure)
+
+// winsor
+winsor wage, gen(wage_w) p(0.025)
+winsor2 wage, cut(2.5 97.5) trim
+winsor2 wage, cut(0 97.5) trim suffix(_trh)
+
+
+
 
 //END
 log close
