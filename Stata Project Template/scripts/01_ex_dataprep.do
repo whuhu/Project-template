@@ -49,6 +49,15 @@ graph bar wage hours, over(race) over(married) stack
 graph box wage, over(race)
 
 // duplicate obs
+sysuse nlsw88.dta, clear
+isid race age
+isid idcode
+
+duplicates list race married in 1/20
+duplicates report race married occupation
+duplicates tag race married occupation, gen(rm_dtag)
+duplicates drop race married occupation, force
+
 
 //END
 log close
