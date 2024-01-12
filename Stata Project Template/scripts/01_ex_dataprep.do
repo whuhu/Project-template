@@ -208,14 +208,104 @@ erepeat(\cmidrule(lr){@span}) ) ///
 booktabs page(dcolumn) alignment(D{.}{.}{-1})
 
 
+// est add
+sysuse nlsw88.dta, clear
+global xx "ttl_exp married south hours tenure age i.industry"
+qui reg wage $xx if race==1
+estadd local Industry "Yes"
+estadd local Occupation "No"
+est store m1
+qui reg wage $xx if race==2
+estadd local Industry "Yes"
+estadd local Occupation "No"
+est store m2
+qui reg wage $xx i.occupation if race==1
+estadd local Industry "Yes"
+estadd local Occupation "Yes"
+est store m3
+qui reg wage $xx i.occupation if race==2
+estadd local Industry "Yes"
+estadd local Occupation "Yes"
+est store m4
+
+local m "m1 m2 m3 m4"
+esttab `m´, mtitle(White Black White Black) b(%6.3f) nogap compress ///
+star(* 0.1 ** 0.05 *** 0.01) ///
+drop(*.industry *.occupation) ///
+ar2 scalar(N Industry Occupation)
 
 
+// dummy variables
+use Nations2.dta,clear
+tab region,gen(reg)
+
+qui reg logco2 urban reg4 urb_reg4
+qui reg logco2 c.urban i.reg4 c.urban#i.reg4
+qui reg logco2 c.urban##i.reg4
+* factor-variable :
+* i. indicator variables
+* c. continuous variables
+* # an interaction between two variables
+* ## factorial interaction which automatically includes all the lower-level
+* interactions involving those variables
+
+qui margins, at(urban = (10(30)100) reg4 = (0 1)) vsquish
+marginsplot, ytitle("Log{subscript:10}(CO{subscript:2} per capita)") xlabel(10(30)100)
+
+// binary outcome models
+probit y x1 x2 x3,r
+logit y x1 x2 x3,or vce(cluster clustvar)
+
+predict yhat
+estat clas
+
+margins,dydx(*) //计算所有解释变量的平均边际效应
+margins,dydx(*) atmeans //计算所有解释变量样本均值处边际效应
+margins,dysx(*) at(x1=0) //计算所有解释变量在x1=0处边际效应
+margins,dydx(x1) //计算解释变量x1的平均边际效应
+margins,eyex(*) //计算平均弹性
+margins,eydx(*) //计算平均半弹性，x变化1单位使y变化百分之几
+margins,dyex(*) //计算平均半弹性，x变化1%使y变化几个单位
+
+logit work age married children education,nolog vce(cluster age)
+
+// Oaxaca-Blinder Decomposition
+oaxaca lnwage educ exper tenure, by(female) weight(1)
+
+// iv estimator
+ivregress 2sls y x1 (x2 = z1 z2)
+ivregress 2sls y x1 (x2 = z1 z2), r first
+
+estat overid
+
+ivreg2 lw s expr tenure rns smsa (iq = med kww mrt age), r orthog (mrt age)
+ivregress 2sls lw s expr tenure rns smsa (iq=med kww), r first
+
+qui reg lw s expr tenure rns smsa med, r
+est store m1
+qui reg lw s expr tenure rns smsa kww, r
+est store m2
+qui reg lw s expr tenure rns smsa med kww, r
+est store m3
+esttab m1 m2 m3, ///
+mtitle("reduced form:med" "reducedform:kww" "reducedform:med,kww") ///
+b(%6.3f) nogap compress ///
+star(* 0.1 ** 0.05 *** 0.01) ///
+ar2 order(med kww)
 
 
+// RDD
+rename demmv X
+rename demvoteshfor2 Y
+gen T=.
+replace T=0 if X<0 & X!=.
+replace T=1 if X>=0 & X!=.
+gen ranwin=(X>=0)
 
-
-
-
+twoway (scatter Y X, msize(vsmall) ///
+mcolor(black) xline(0, lcolor(black))), ///
+graphregion(color(white)) ytitle(Outcome) ///
+xtitle(Score)
 
 
 
