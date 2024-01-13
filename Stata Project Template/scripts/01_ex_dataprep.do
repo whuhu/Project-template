@@ -308,6 +308,10 @@ graphregion(color(white)) ytitle(Outcome) ///
 xtitle(Score)
 
 
+* Three Steps:
+* 1 Graph the data for visual inspection
+* 2 Estimate the treatment effect using regression methods
+* 3 Run checks on assumptions underlying research design
 
 
 
