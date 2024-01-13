@@ -313,6 +313,162 @@ xtitle(Score)
 * 2 Estimate the treatment effect using regression methods
 * 3 Run checks on assumptions underlying research design
 
+preserve
+rdplot Y X, nbins(20 20) genvars support(-100 100)
+gen obs = 1
+collapse (mean) rdplot_mean_x rdplot_mean_y (sum) obs, by (rdplot_id)
+order rdplot_id
+tabstat rdplot_mean_x rdplot_mean_y obs,by(rdplot_id)
+restore
+
+rdplot Y X, nbins(20 20) binselect(es) ///
+graph_options(graphregion(color(white)) ///
+xtitle(Score) ytitle(Outcome))
+
+cmogram Y X, cut(0) scatter lineat(0) qfitci
+
+sum X
+local hvalueR=r(max)
+local hvalueL= abs(r(min))
+rdrobust Y X, h(`hvalueL' `hvalueR') //自动选择阶数
+rdrobust Y X, h(`hvalueL' `hvalueR') p(2) //二阶拟合
+rdrobust Y X, h(`hvalueL' `hvalueR') p(3) //三阶拟合
+
+rdbwselect Y X, c(0) kernel(uni) bwselect(mserd)
+
+rdrobust Y X, kernel(uniform) p(1)
+rdrobust Y X, c(0) kernel(uni) bwselect(mserd) p(2) h(11.597) all
+rdrobust Y X, c(0) kernel(uni) bwselect(mserd) p(3) h(11.597) all
+rdrobust Y X, c(0) kernel(uni) bwselect(mserd) p(4) h(11.597) all
+
+rdrobust Y X, p(1) kernel(triangular) bwselect(mserd)
+eret list
+local bandwidth = e(h_l)
+rdplot Y X if abs(X) <= `bandwidth´, p(1) h(`bandwidth´) kernel(triangular)
+
+rd Y X, mbw(100) gr z0(0) kenel(tri)
+
+global covariates "presdemvoteshlag1 demvoteshlag1 demvoteshlag2 demwinprv1 demwinprv2 dmidte rm dpresdem"
+rdrobust Y X, covs($covariates) p(1) kernel(tri) bwselect(mserd)
+foreach y of global covariates {
+qui rdplot `y´ X, graph_options(xtitle("score")) saving(`y´)
+graph export fig_`y´.png, width(500) replace
+}
+
+foreach y of global covariates {
+eststo : qui rdrobust `y´ X, all
+}
+esttab est1 est2 est3 est4 est5 est6 est7 , ///
+se r2 mtitle star(* 0.1 ** 0.05 *** 0.01) compress
+
+rdrobust Y X
+local h = e(h_l) //获取最优带宽
+rddensity X, p(1) h(`h´ `h´) plot
+
+DCdensity X, breakpoint(0) generate(Xj Yj r0 fhat se_fhat) // McCracy test
+
+// falsification test
+local xmax=r(max)
+local xmin=r(min)
+forvalues i=1(1)3{
+local jr=`xmax´/(4/(4-`i´))
+local jl=`xmin´/(4/(4-`i´))
+qui rdrobust Y X if X>0, c(`jr´)
+est store jl`i´
+qui rdrobust Y X if X<0, c(`jl´)
+est store jr`i´
+}
+
+qui rdrobust Y X ,c(0) //加上真实断点的回归结果，作为benchmark结果
+est store jbaseline
+
+local vlist "jl1 jl2 jl3 jbaseline jr3 jr2 jr1 "
+coefplot `vlist´, yline(0, lcolor(black) lpattern(dash)) drop(_cons) vertical ///
+graphregion(color(white)) ytitle("RD Treatment Effect") legend(off)
+
+sum X
+local xmax=r(max)
+forvalues i=1(1)5{
+local j=`xmax´*0.01*`i´
+qui rdrobust Y X if abs(X)>`j´
+est store obrob`i´
+}
+
+local vlist "obrob1 obrob2 obrob3 obrob4 obrob5"
+coefplot `vlist´, yline(0, lcolor(black) lpattern(dash)) drop(_cons) vertical ///
+graphregion(color(white)) legend(off) ytitle("RD Treatment Effect")
+
+qui rdrobust Y X //自动选择最优带宽
+local h = e(h_l) //获取最优带宽
+forvalues i=1(1)8{
+local hrobust=`h´*0.25*`i´
+qui rdrobust Y X ,h(`hrobust´)
+est store hrob`i´
+}
+
+local vlist "hrob1 hrob2 hrob3 hrob4 hrob5 hrob6 hrob7 hrob8 "
+coefplot `vlist´, yline(0, lcolor(black) lpattern(dash)) drop(_cons) vertical ///
+graphregion(color(white)) ytitle("RD Treatment Effect") legend(off)
+
+
+// fuzzy rd
+rd y d x, z0(real) strineq mbw(numlist) graph bdep oxline ///
+kernel(rectangle) covar(varlist) x(varlist)
+
+reg lne win i votpop bla-vet
+rd lne d, gr mbw(100)
+rd lne d, mbw(100) cov(i votpop black blucllr farmer fedwrkr forborn manuf unemplyd union urban veterans)
+rd lne d, gr bdep oxline
+rd lne d, mbw(100) x(i votpop black blucllr farmer fedwrkr forborn manuf unemplyd union urban veterans)
+
+g byte randwin=cond(uniform()<.1,1-win,win)
+rd lne randwin d, gr mbw(100) cov(i votpop black blucllr farmer fedwrkr forborn manuf unemply d union urban veterans)
+
+rdrobust lne d, fuzzy(randwin)
+
+ivregress 2sls mcn (pen=elig) esse_m esse_m2 anno1995-anno2004, first robust
+
+
+// fixed effect
+use abond.dta, clear
+// unbalance to balance
+xtset id year
+xtdes
+xtbalance, rang(1978 1982) miss(_all)
+
+
+use traffic, clear
+est clear
+eststo : qui reg fatal beertax
+eststo : qui reg fatal beertax i.year
+esttab, star(* .1 ** .05 * .01) ///
+nogap nonumber replace ///
+se(%5.4f) ar2
+
+xtset state year
+xtline fatal if year==1982
+xtreg fatal beertax spircons unrate perinck, fe
+xtreg fatal beertax spircons unrate perinck, fe vce(cluster state)
+xtreg fatal beertax spircons unrate perinck i.year, fe vce(cluster state)
+esttab FE FE_cse FE_TW, star(* .1 ** .05 * .01) ///
+nogap nonumber replace se(%5.4f) ar2 drop(1982.year)
+
+
+// did
+use did, clear
+gen time = (year>=1994) & !missing(year)
+gen treated = (country>4) & !missing(country)
+gen did = time*treated
+
+reg y did time treated, r
+reg y time##treated, r
+
+ssc install diff
+diff y, t(treated) p(time)
+
+
+
+
 
 
 
