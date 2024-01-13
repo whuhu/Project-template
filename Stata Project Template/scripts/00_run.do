@@ -28,6 +28,7 @@ foreach folder of local subdirectories {
 // Create results subfolders if they don't exist already
 cap mkdir "$results/figures"
 cap mkdir "$results/tables"
+cap mkdir "$scripts/programs"
 
 // The following code ensures that all user-written ado files needed for
 //  the project are saved within the project directory, not elsewhere.

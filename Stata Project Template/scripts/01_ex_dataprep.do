@@ -10,7 +10,7 @@
 * - Part 4 Analyze Pattern within Each Year
 
 ************************Part 1 Data Cleaning***********************
-log using "$logs/dataprep.smcl", replace
+log using "$logs/dataprep.log", text replace
 
 
 import delimited "$data/ .csv",clear
@@ -466,10 +466,27 @@ reg y time##treated, r
 ssc install diff
 diff y, t(treated) p(time)
 
+// parallel trend
+gen Dyear = year-1994
+gen Before3 = (Dyear==-3 & treated==1)
+gen Before2 = (Dyear==-2 & treated==1)
+gen Before1 = (Dyear==-1 & treated==1)
+gen Current = (Dyear==0 & treated==1)
+gen After1 = (Dyear==1 & treated==1)
+gen After2 = (Dyear==2 & treated==1)
+gen After3 = (Dyear==3 & treated==1)
+
+xtreg y time treated Before3 Before2 Before1 Current After1 After2 After3 i.year, fe
+
+coefplot reg, keep(Before3 Before2 Before1 Current After1 After2 After3) ///
+vertical recast(connect) scheme(s1mono) msymbol(circle_hollow) ///
+yline(0, lwidth(vthin) lpattern(dash) lcolor(teal)) ///
+xline(4, lwidth(vthin) lpattern(dash) lcolor(teal)) ///
+ciopts(lpattern(dash) recast(rcap) msize(medium))
 
 
-
-
+reg log_length_stay i.phys_id##i.hour_id, r
+coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for time to shift") baselevels ci vertical label xlabel(, angle(45) labsize(vsmall)) yline(0)
 
 
 //END
