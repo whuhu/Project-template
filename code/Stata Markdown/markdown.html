@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Haoliang Hu huhaoliang@whu.edu.cn" />
+  <title>Code Sample </title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  
+  
+  
+  
+  
+  
+  
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+<style>
+/* CSS for Markstat 2.0 using Pandoc 2.0 */
+body{padding:14px 28px; max-width:45em;}
+body, table {font-family: Helvetica, Arial, Sans-serif; font-size: 14px;}
+h1, h2, h3, h4 {font-weight: normal; color: #3366cc}
+h1 {font-size: 200%;}
+h2 {font-size: 150%;}
+h3 {font-size: 120%;}
+h4 {font-size: 100%; font-weight:bold}
+img.center {display:block; margin-left:auto; margin-right:auto}
+.small{font-size:8pt;}
+a {color: black;}
+a:visited {color: #808080;}
+a.plain {text-decoration:none;}
+a.plain:hover {text-decoration:underline;}
+.em {font-weight:bold;}
+pre, code {font-family: "lucida console", monospace;}
+pre.stata {font-size:13px; line-height:13px;}
+pre {padding:8px; border:1px solid #c0c0c0; border-radius:8px; background-color:#fdfdfd;}
+code {color:#3366cc; background-color:#fafafa;}
+pre code { color:black; background-color:white}
+/* Added for Pandoc */
+figure > img, div.figure > img {display:block; margin:auto}
+figcaption, p.caption {text-align:center; font-weight:bold; color:#3366cc;}
+h1.title {text-align:center; margin-bottom:0}
+p.author, h2.author {font-style:italic; text-align:center;margin-top:4px;margin-bottom:0}
+p.date, h3.date {text-align:center;margin-top:4px; margin-bottom:0}
+/* Tables*/
+table { margin:auto; border-collapse:collapse; }
+table caption { margin-bottom:1ex;}
+td {padding:0 0 0 0} /* override */
+table:not([class]) th { padding:4px 6px } 
+table:not([class]) td { padding:4px 6px } 
+table:not([class]) thead tr:first-child th {border-top:1px solid black; padding-top:6px}
+table:not([class]) thead tr:last-child  th {padding-bottom:6px}
+table:not([class]) tbody tr:first-child td {border-top:1px solid black; padding-top:6px}
+table:not([class]) tbody tr:last-child  td {padding-bottom:6px;}
+table:not([class]) tbody:last-child tr:last-child td {border-bottom:1px solid black;}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Code Sample <a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
+<p class="author">Haoliang Hu <a href="mailto:huhaoliang@whu.edu.cn"
+class="email">huhaoliang@whu.edu.cn</a></p>
+<p class="date">Dec. 15 2023</p>
+</header>
+<h2 id="background">Background</h2>
+<p>This sample is my code for a data task. It has 5 parts:<br />
+- Part 0 Initialization<br />
+- Part 1 Data Cleaning<br />
+- Part 2 Data Exploration<br />
+- Part 3 Estimation and Causal Inference<br />
+- Part 4 Further Analysis<br />
+</p>
+<h2 id="initialization">0. Initialization</h2>
+<pre class='stata'>. clear all
+
+. set more off 
+
+. set maxvar 20000
+
+
+. set scheme cleanplots, perm
+(set scheme preference recorded)
+
+. 
+. // If the reader wants to replicate the results, he/she just needs to change this global path and put the data in raw_data file. 
+. global path "C:\Users\huhu\Desktop\Code Task\David Chan Data Task\"
+
+. global D    "$path\data"      //data file
+
+. global Out  "$path\out"       //result: graph and table
+
+. cd "$D"                       //set current working directory
+C:\Users\huhu\Desktop\Code Task\David Chan Data Task\data
+
+. 
+. 
+. import delimited "test_data.csv",clear
+(encoding automatically selected: ISO-8859-2)
+(8 vars, 8,831 obs)
+
+. save raw_data.dta, replace
+file raw_data.dta saved
+
+. 
+. *********************Question 0***************************************
+. // summarize data
+. qui summarize, detail
+
+. qui duplicates list arrive leave
+
+. 
+</pre>
+<p>Summarize the data. I find this data set contains entries of patient
+flow. The shift duration typically lasts around 9 to 10 hours, and there
+are rare situations where the shift lasts only 2 hours. And I checked
+the duplication of the arrive and leave times of patients and found some
+observations that may appear to be data entry errors as they have
+exactly the same arrive and leave times, which may result from coding
+errors of the ED system. In the following analysis, I take them as true
+data for convenience.</p>
+<h2 id="data-cleaning">1. Data Cleaning</h2>
+<p>First I transfer the a.m./p.m. to 24-hours in order to transfer the
+original datatime format into stata time format. Notably, we should use
+double here to generate the new stata datatime variable. Finally we get
+there are patients arriving before their physician’s shift starts and
+patients discharged after their physician’s shift ends.</p>
+<pre class='stata'>. *********************Question 1*****************************************
+. // transfer datetime
+. gen shift_date_time = date(shift_date, "DMY")
+
+. format shift_date_time %td
+
+. 
+. // extract hour and AM/PM indicator from shift_start and shift_end
+. // replace noon to 12 pm for conviency
+. qui replace shift_start="12 p.m." if shift_start=="noon"
+
+. qui replace shift_end="12 p.m." if shift_end=="noon"
+
+. 
+. gen hour_start = real(substr(shift_start, 1, strpos(shift_start, " ") - 1))
+
+. gen am_pm_start = substr(shift_start, -4, 4)
+
+. 
+. // do the same for shift_end
+. gen hour_end = real(substr(shift_end, 1, strpos(shift_end, " ") - 1))
+
+. gen am_pm_end = substr(shift_end, -4, 4)
+
+. 
+. // convert to 24 hour format
+. qui replace hour_start = hour_start + 12 if am_pm_start == "p.m." &amp; hour_start != 12
+
+. qui replace hour_end = hour_end + 12 if am_pm_end == "p.m." &amp; hour_end != 12
+
+. 
+. // combine data with time
+. gen shift_start_data_time = shift_date + " " + string(hour_start, "%02.0f") + ":00:00"
+
+. gen shift_end_data_time = shift_date + " " + string(hour_end, "%02.0f") + ":00:00"
+
+. // adjust for across day pattern
+. gen shift_date_time_1 = string(shift_date_time + 1, "%td")
+
+. 
+. qui replace shift_end_data_time = shift_date_time_1 + " " + string(hour_end, "%02.0f") ///
+>  + ":00:00" if shift_start == "7 p.m."
+
+. 
+. 
+. // note, use double to ensure precient
+. gen double shift_start_time = clock(shift_start_data_time, "DMY hms")
+
+. gen double shift_end_time = clock(shift_end_data_time, "DMY hms")
+
+. format shift_start_time %tc
+
+. format shift_end_time %tc
+
+. 
+. gen double arrive_time = clock(arrive, "DMY hms")
+
+. gen double leave_time = clock(leave, "DMY hms")
+
+. format arrive_time %tc
+
+. format leave_time %tc
+
+. 
+. // calculate percentages
+. // patients arriving before their physician's shift starts
+. gen arrive_before_shift = arrive_time &lt; shift_start_time
+
+. 
+. // patients discharged after their physician's shift ends
+. gen leave_after_shift = leave_time > shift_end_time
+
+. 
+. // calculate percentages
+. qui sum arrive_before_shift
+
+. qui sum leave_after_shift
+
+. 
+</pre>
+<h2 id="data-exploration">2. Data Exploration</h2>
+<p>I calculated the average predicted severity by half-hour of patient
+arrival. The connected plot and trend line does not show obvious
+connection between hours of arrival and the predicted severity of the
+patient. To test formally test whether patient severity is or is not
+predicted by hour of the day, I regressed the pred_lnlos on the dummies
+of hour arrival variables. The coefficient plot of dummies shows
+patients stay shorter at dawn and after lunch and stay longer in the
+morning. However, the result may result from the limit of usage of some
+inspect equipment such as CT.</p>
+<pre class='stata'>. *********************Question 2*****************************************
+. // get hours and minutes
+. gen arrive_hour = hh(arrive_time)
+
+. gen arrive_minute = mm(arrive_time)
+
+. 
+. // compute half-hour
+. gen half_hour_interval = arrive_hour + (arrive_minute >= 30)/2
+
+. 
+. // calculate average servenity by half hours
+. bysort half_hour_interval: egen avg_severity = mean(pred_lnlos)
+
+. 
+. qui twoway (connected avg_severity half_hour_interval,m(o)) ///
+> (lfit avg_severity half_hour_interval, lpattern(dash)), ///
+> ytitle("Average Severity") xtitle("Half-Hour Interval of Day") ///
+> title("Average Severity by Half-Hour of Patient Arrival") ///
+> legend(ring(0) position(4))
+
+. qui graph export "$Out\Average_Severity.png", replace
+
+. 
+. // formally test whether patient severity is or is not predicted by hour of the day
+. qui reg avg_severity i.arrive_hour,r
+
+. 
+. qui coefplot,keep(*.arrive_hour) title("Coefficient of Arrival Hours") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+
+. qui graph export "$Out\Coef_Hours.png", replace
+</pre>
+<h2 id="estimation-and-causal-inference">3.Estimation and Causal
+Inference</h2>
+<ol type="a">
+<li><p>I graphed the census variation relative to end of shift as Fig. 3
+shows. The census count – in any census scope, would increase at the
+beginning of the physician’s shift and decreases as the time get closer
+to his end of shift time. And the patient under care still decreases
+even the time passed the shift time for 4 hours.</p></li>
+<li><p>As we have the accurate time of the shift time and the patient
+arrival time. I construct the lower bound of the census under the
+criterion that we only take the patients who is under care for the whole
+hours into account. And I construct the upper bound of the census under
+the criterion that we counts the patients whoever is under care when he
+arrives the ED at that hour. At last, the finer census – I excluded the
+patients whose arrival time is among the last 15 minutes of the hour or
+leave time is among the first 15 minutes of the hour. One issue one may
+addressed is that the physician may arrive at the EP before his
+scheduled time, which would affects the power of our above analysis. In
+the mean time, the time between the arrival time and leave time of
+patients may not be accounted in the care time, they may wait at the
+waiting room or doing some paper works before the physician’s
+care.</p></li>
+<li><p>If we have the ED data, we may construct the census of the
+co-work of more than one physicians, and under this circumstance, they
+may behavior differently.</p></li>
+</ol>
+<pre class='stata'>. *********************Question 3*****************************************
+. // extend shift end by 4 hours
+. gen double shift_end_4h_more = shift_end_time + 60*60*4000
+
+. format shift_end_4h_more %tc
+
+. 
+. save temp.dta, replace
+file temp.dta saved
+
+. 
+. use temp.dta, clear
+
+. // creat hourly interval for time shift
+. gen hours_of_shift = (shift_end_4h_more - shift_start_time) / 3600000
+
+. 
+. // create an index for each shift
+. gen shift_index = _n 
+
+. 
+. // expand the dataset for each hour of each shift
+. qui expand hours_of_shift
+
+. 
+. // generate hour_id for each hour within the shift
+. bysort shift_index: gen hour_id = _n
+
+. 
+. gen double hour_lb = shift_start_time + (hour_id-1)*3600000
+
+. gen double hour_ub = hour_lb + 3600000
+
+. 
+. format hour_lb %tc
+
+. format hour_ub %tc
+
+. 
+. // lower bound census: counts only throught whole hours
+. gen patient_under_care_lb = (arrive_time &lt;= hour_lb) &amp; (leave_time > hour_ub)
+
+. 
+. bysort phys_id shift_date hour_id: egen census_lb = sum(patient_under_care_lb)
+
+. 
+. // upper bound census: counts if intersects within hours
+. gen patient_under_care_ub = (arrive_time &lt;= hour_ub) &amp; (leave_time > hour_lb)
+
+. 
+. bysort phys_id shift_date hour_id: egen census_ub = sum(patient_under_care_ub)
+
+. 
+. // finer bound census
+. gen patient_under_care_fb = (arrive_time &lt;= hour_ub) &amp; (leave_time > hour_lb)
+
+. qui replace patient_under_care_fb = 0 ///
+> if (arrive_time &lt;= hour_ub) &amp; (leave_time > hour_lb) &amp; (leave_time &lt; hour_lb + 900000)
+
+. qui replace patient_under_care_fb = 0 ///
+> if (arrive_time &lt;= hour_ub) &amp; (arrive_time > hour_ub - 900000) &amp; (leave_time > hour_lb)
+
+. 
+. bysort phys_id shift_date hour_id: egen census_fb = sum(patient_under_care_fb)
+
+. 
+. // end of shift
+. gen end_of_shift = hour_id - hours_of_shift + 4
+
+. save patients_all.dta, replace
+file patients_all.dta saved
+
+. 
+. use patients_all.dta, clear
+
+. qui duplicates drop phys_id shift_date shift_start shift_end end_of_shift, force
+
+. keep phys_id shift_date shift_start shift_end hour_id ///
+> patient_under_care_lb patient_under_care_ub patient_under_care_fb end_of_shift
+
+. rename hour_id hour
+
+. save census.dta, replace
+file census.dta saved
+
+. 
+. use census.dta, clear
+
+. // How does the census vary with time relative to end of shift
+. bysort end_of_shift: egen sum_patient_under_care_fb = sum(patient_under_care_fb)
+
+. bysort end_of_shift: egen sum_patient_under_care_lb = sum(patient_under_care_lb)
+
+. bysort end_of_shift: egen sum_patient_under_care_ub = sum(patient_under_care_ub)
+
+. 
+. qui duplicates drop end_of_shift, force
+
+. qui twoway (connected sum_patient_under_care_fb end_of_shift) ///
+> (connected sum_patient_under_care_lb end_of_shift) ///
+> (connected sum_patient_under_care_ub end_of_shift), xline(0, lpattern(dash)) ///
+> ytitle("Census Count") xtitle("Time Relative to End of Shift (Hours)") ///
+> title("Census Variation Relative to End of Shift") xtick(-9(1)4) ///
+> legend(ring(0) pos(11))
+
+. qui graph export "$Out\Census_Variation.png", replace
+
+. 
+</pre>
+<h2 id="further-analysis">4. Further Analysis</h2>
+<p>I regressed the length of the stay on the dummies of the physicians,
+the result shows at the Figure 4, phys_id=16 is the one who is fastest
+at discharging patients. The potential threats may be that different
+physicians in different ED may encounter different types of patients,
+thus leading to different discharge time. So we can control the expected
+log length of stay, where length of stay is the difference between leave
+and arrive, based on patient demographics and medical conditions. The
+result is robust, physician 16 and 30 are two who are fastest at
+discharging patients.</p>
+<p>Moreover, a potential issue may arising from the fact that the
+patient may be discharged after the physician’s shift time. So we just
+regress the log length of stay on the dummies of time to shift. The
+result is still robust to this specification: physician 16 and 30 are
+two who are fastest at discharging patients.</p>
+<pre class='stata'>. *********************Question 4*****************************************
+. use temp.dta, clear
+
+. 
+. // gen length of stay(seconds)
+. gen double log_length_stay = log((leave_time - arrive_time)/1000)
+(4 missing values generated)
+
+. 
+. qui reg log_length_stay i.phys_id, r
+
+. qui coefplot,keep(*.phys_id) title("Coefficient of Physician") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+
+. qui graph export "$Out\Coef_phys.png", replace
+
+. 
+. // control pred_lnlos
+. qui reg log_length_stay i.phys_id pred_lnlos, r
+
+. qui coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for pred_los") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+
+. qui graph export "$Out\Coef_phys_control.png", replace
+
+. 
+. 
+. // los versus time to shift
+. use patients_all.dta, clear
+
+. gen double log_length_stay = log((leave_time - arrive_time)/1000)
+(52 missing values generated)
+
+. 
+. qui reg log_length_stay i.phys_id##i.hour_id, r
+
+. qui coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for time to shift") baselevels ci vertical /// 
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+
+. 
+. qui graph export "$Out\Interaction_coef.png", replace
+
+. 
+</pre>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I finished this markdown file by <code>markstat</code>.
+The source code is in my github repository, <a
+href="https://github.com/whuhu/">here</a><a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

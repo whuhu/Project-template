@@ -1,0 +1,203 @@
+---
+title: "**Lab3: Stata and Markdown**"  
+subtitle: "***Introduction to Econometrics,Fall 2020***"
+
+author: "**Yi Wang**"
+institute: "**Nanjing University**"
+date: "*9/27/2020*"
+
+header-includes: 
+  -    \usepackage[UTF8]{ctex}
+
+---
+
+# What is Markdown?
+
+- 什么是Markdowm？
+  
+  - Markdown是一种轻量级「标记语言」，通常为程序员群体所用。
+  - Markdown也是国际杂志编辑以及许多写作者都广泛使用的标记语言。
+  
+# What is Markdown?
+
+- 什么是Markdowm？
+
+  - 举个例子解释:。
+  - 大部分写作都是用 Word（Windows） 或 Pages（Mac）写作。
+  - .doc 或 Pages 格式有如下问题：系统&版本兼容问题；大部分人电脑上的Office都是盗版的；.txt 写的稿子没有格式；与其他软件的结合能力差。
+  
+# What is Markdown?
+
+- 为什么要学习 Markdown？
+
+  - 这就是 Markdown 登场的时候了。
+  - Markdown的语法十分简单，常用的标记符号不超过十个，用于日常写作记录绰绰有余，不到半小时就能完全掌握。
+  - 但就是这十个不到的标记符号，却能让人优雅地沉浸式记录，专注内容而不是纠结排版，达到「心中无尘，码字入神」的境界。
+  
+# What is Markdown?
+
+- Markdown 的优点：
+
+  - 1.纯文本，所以兼容性极强，可以用所有文本编辑器打开。可以用它来标记文本的样式，而且语法非常简单。
+  - 2.让你专注于文字而不是排版。
+  - 3.格式转换方便，Markdown 的文本你可以轻松转换为 pdf、docx、html、电子书等。
+  - 4.Markdown 的标记语法有极好的可读性。
+  - 5.最重要的，可以与统计软件（R、Stata）相结合，生成动态文档。
+  
+# What can we use markdown to do?
+
+- make a to-do list
+
+  - [ ] read a book
+
+  - [x] do homework
+
+  - [x] watch a movie
+
+```
+  - [ ] read a book
+
+  - [x] do homework
+
+  - [x] watch a movie
+
+```
+
+# What can we use markdown to do?
+
+- write formula
+
+$$E=mc^2$$
+
+```
+	$$E=mc^2$$
+```
+
+# Markdown Synatax tutorial
+
+- Markdown Synatax tutorial
+
+  - [Markdown online tutorial](https://commonmark.org/help/tutorial/)
+  - [创始人 John Gruber 的 Markdown 语法说明](https://daringfireball.net/projects/markdown/syntax)
+  - [GitHub Flavored Markdown(GFM)官方文档](https://github.github.com/gfm/)
+
+# Basic Markdown Synatax
+
+- 1.Title
+
+```
+	# 一级标题
+	## 二级标题
+	### 三级标题
+	#### 四级标题
+	##### 五级标题
+	###### 六级标题
+```
+  - 总共六级，只需要增加 # 即可，标题字号相应降低。
+  - 注：# 和「一级标题」之间建议保留一个字符的空格，这是最标准的 Markdown 写法。
+
+# Basic Markdown Synatax
+
+- 2.Bold & Newline
+
+  - **这是加粗的文字** 
+
+```
+	**这是加粗的文字** 
+```
+
+  - 空格+空格+回车
+
+# Basic Markdown Synatax
+
+- 3.List
+
+  - 列表格式也很常用，只需要在文字前面加上 【-】 或 【*】或 【+】 就可以了。
+  - 注：【-】、【*】、【+】、【1.】 和文本之间要保留一个字符的空格。
+  
+  - 无序列表
+  
+```
+	- 文本1
+	* 文本2
+	+ 文本3
+```
+
+  - 有序列表
+  
+```
+	1. 文本1
+	2. 文本2
+	3. 文本3
+```
+
+# Basic Markdown Synatax
+
+- 4.Links & Images
+
+  - 插入链接
+
+[Markdown online tutorial](https://commonmark.org/help/tutorial/)
+
+```
+	[Markdown online tutorial](https://commonmark.org/help/tutorial/)
+```
+
+# Basic Markdown Synatax
+
+- 4.Links & Images
+
+  - 插入图片
+  
+![NJU](D:\Teaching\Stata\lab3\Pre\NJU.png){width="40%"}
+
+```
+	![NJU](D:\Teaching\Stata\lab3\Pre\NJU.png){width="40%"}
+```
+
+# An Example
+
+Let us read the fuel efficiency data that is shipped with Stata
+
+    sysuse auto, clear
+
+To study how fuel efficiency depends on weight it is useful to
+transform the dependent variable from "miles per gallon" to
+"gallons per 100 miles"
+
+    gen gphm = 100/mpg
+
+We then obtain a more linear relationship
+
+    twoway scatter gphm weight || lfit gphm weight ///
+        , ytitle(Gallons per Mile) legend(off)
+    graph export auto.png, width(500) replace
+
+![Fuel Efficiency](auto.png)
+
+That's all for now!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

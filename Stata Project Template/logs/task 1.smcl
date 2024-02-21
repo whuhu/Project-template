@@ -16,4 +16,18 @@
 {com}. 
 {txt}end of do-file
 
+{com}. do "C:\Users\huhu\AppData\Local\Temp\STD4d60_000000.tmp"
+{txt}
+{com}. sysuse nlsw88.dta,clear
+{txt}(NLSW, 1988 extract)
+
+{com}. collapse (mean) wage hours ///
+> (count) n_w=wage n_h=hours, ///
+> by(industry)
+{res}{txt}
 {com}. 
+{txt}end of do-file
+
+{com}. help hbar
+
+. 

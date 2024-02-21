@@ -1,0 +1,338 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\huhu\Desktop\Project-template\code\Stata Markdown\markdown.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}17 Feb 2024, 22:30:46
+{txt}
+{com}. //_1
+. clear all
+{res}{txt}
+{com}. set more off 
+{txt}
+{com}. set maxvar 20000
+
+{txt}
+{com}. set scheme cleanplots, perm
+{txt}({cmd:set scheme} preference recorded)
+
+{com}. 
+. // If the reader wants to replicate the results, he/she just needs to change this global path and put the data in raw_data file. 
+. global path "C:\Users\huhu\Desktop\Code Task\David Chan Data Task\"
+{txt}
+{com}. global D    "$path\data"      //data file
+{txt}
+{com}. global Out  "$path\out"       //result: graph and table
+{txt}
+{com}. cd "$D"                       //set current working directory
+{res}C:\Users\huhu\Desktop\Code Task\David Chan Data Task\data
+{txt}
+{com}. 
+. 
+. import delimited "test_data.csv",clear
+{res}{txt}(encoding automatically selected: ISO-8859-2)
+{text}(8 vars, 8,831 obs)
+
+{com}. save raw_data.dta, replace
+{txt}{p 0 4 2}
+file {bf}
+raw_data.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. *********************Question 0***************************************
+. // summarize data
+. qui summarize, detail
+{txt}
+{com}. qui duplicates list arrive leave
+{txt}
+{com}. 
+. //_2
+. *********************Question 1*****************************************
+. // transfer datetime
+. gen shift_date_time = date(shift_date, "DMY")
+{txt}
+{com}. format shift_date_time %td
+{txt}
+{com}. 
+. // extract hour and AM/PM indicator from shift_start and shift_end
+. // replace noon to 12 pm for conviency
+. qui replace shift_start="12 p.m." if shift_start=="noon"
+{txt}
+{com}. qui replace shift_end="12 p.m." if shift_end=="noon"
+{txt}
+{com}. 
+. gen hour_start = real(substr(shift_start, 1, strpos(shift_start, " ") - 1))
+{txt}
+{com}. gen am_pm_start = substr(shift_start, -4, 4)
+{txt}
+{com}. 
+. // do the same for shift_end
+. gen hour_end = real(substr(shift_end, 1, strpos(shift_end, " ") - 1))
+{txt}
+{com}. gen am_pm_end = substr(shift_end, -4, 4)
+{txt}
+{com}. 
+. // convert to 24 hour format
+. qui replace hour_start = hour_start + 12 if am_pm_start == "p.m." & hour_start != 12
+{txt}
+{com}. qui replace hour_end = hour_end + 12 if am_pm_end == "p.m." & hour_end != 12
+{txt}
+{com}. 
+. // combine data with time
+. gen shift_start_data_time = shift_date + " " + string(hour_start, "%02.0f") + ":00:00"
+{txt}
+{com}. gen shift_end_data_time = shift_date + " " + string(hour_end, "%02.0f") + ":00:00"
+{txt}
+{com}. // adjust for across day pattern
+. gen shift_date_time_1 = string(shift_date_time + 1, "%td")
+{txt}
+{com}. 
+. qui replace shift_end_data_time = shift_date_time_1 + " " + string(hour_end, "%02.0f") ///
+>  + ":00:00" if shift_start == "7 p.m."
+{txt}
+{com}. 
+. 
+. // note, use double to ensure precient
+. gen double shift_start_time = clock(shift_start_data_time, "DMY hms")
+{txt}
+{com}. gen double shift_end_time = clock(shift_end_data_time, "DMY hms")
+{txt}
+{com}. format shift_start_time %tc
+{txt}
+{com}. format shift_end_time %tc
+{txt}
+{com}. 
+. gen double arrive_time = clock(arrive, "DMY hms")
+{txt}
+{com}. gen double leave_time = clock(leave, "DMY hms")
+{txt}
+{com}. format arrive_time %tc
+{txt}
+{com}. format leave_time %tc
+{txt}
+{com}. 
+. // calculate percentages
+. // patients arriving before their physician's shift starts
+. gen arrive_before_shift = arrive_time < shift_start_time
+{txt}
+{com}. 
+. // patients discharged after their physician's shift ends
+. gen leave_after_shift = leave_time > shift_end_time
+{txt}
+{com}. 
+. // calculate percentages
+. qui sum arrive_before_shift
+{txt}
+{com}. qui sum leave_after_shift
+{txt}
+{com}. 
+. //_3
+. *********************Question 2*****************************************
+. // get hours and minutes
+. gen arrive_hour = hh(arrive_time)
+{txt}
+{com}. gen arrive_minute = mm(arrive_time)
+{txt}
+{com}. 
+. // compute half-hour
+. gen half_hour_interval = arrive_hour + (arrive_minute >= 30)/2
+{txt}
+{com}. 
+. // calculate average servenity by half hours
+. bysort half_hour_interval: egen avg_severity = mean(pred_lnlos)
+{txt}
+{com}. 
+. qui twoway (connected avg_severity half_hour_interval,m(o)) ///
+> (lfit avg_severity half_hour_interval, lpattern(dash)), ///
+> ytitle("Average Severity") xtitle("Half-Hour Interval of Day") ///
+> title("Average Severity by Half-Hour of Patient Arrival") ///
+> legend(ring(0) position(4))
+{txt}
+{com}. qui graph export "$Out\Average_Severity.png", replace
+{txt}
+{com}. 
+. // formally test whether patient severity is or is not predicted by hour of the day
+. qui reg avg_severity i.arrive_hour,r
+{txt}
+{com}. 
+. qui coefplot,keep(*.arrive_hour) title("Coefficient of Arrival Hours") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+{txt}
+{com}. qui graph export "$Out\Coef_Hours.png", replace
+{txt}
+{com}. //_4
+. *********************Question 3*****************************************
+. // extend shift end by 4 hours
+. gen double shift_end_4h_more = shift_end_time + 60*60*4000
+{txt}
+{com}. format shift_end_4h_more %tc
+{txt}
+{com}. 
+. save temp.dta, replace
+{txt}{p 0 4 2}
+file {bf}
+temp.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. use temp.dta, clear
+{txt}
+{com}. // creat hourly interval for time shift
+. gen hours_of_shift = (shift_end_4h_more - shift_start_time) / 3600000
+{txt}
+{com}. 
+. // create an index for each shift
+. gen shift_index = _n 
+{txt}
+{com}. 
+. // expand the dataset for each hour of each shift
+. qui expand hours_of_shift
+{txt}
+{com}. 
+. // generate hour_id for each hour within the shift
+. bysort shift_index: gen hour_id = _n
+{txt}
+{com}. 
+. gen double hour_lb = shift_start_time + (hour_id-1)*3600000
+{txt}
+{com}. gen double hour_ub = hour_lb + 3600000
+{txt}
+{com}. 
+. format hour_lb %tc
+{txt}
+{com}. format hour_ub %tc
+{txt}
+{com}. 
+. // lower bound census: counts only throught whole hours
+. gen patient_under_care_lb = (arrive_time <= hour_lb) & (leave_time > hour_ub)
+{txt}
+{com}. 
+. bysort phys_id shift_date hour_id: egen census_lb = sum(patient_under_care_lb)
+{txt}
+{com}. 
+. // upper bound census: counts if intersects within hours
+. gen patient_under_care_ub = (arrive_time <= hour_ub) & (leave_time > hour_lb)
+{txt}
+{com}. 
+. bysort phys_id shift_date hour_id: egen census_ub = sum(patient_under_care_ub)
+{txt}
+{com}. 
+. // finer bound census
+. gen patient_under_care_fb = (arrive_time <= hour_ub) & (leave_time > hour_lb)
+{txt}
+{com}. qui replace patient_under_care_fb = 0 ///
+> if (arrive_time <= hour_ub) & (leave_time > hour_lb) & (leave_time < hour_lb + 900000)
+{txt}
+{com}. qui replace patient_under_care_fb = 0 ///
+> if (arrive_time <= hour_ub) & (arrive_time > hour_ub - 900000) & (leave_time > hour_lb)
+{txt}
+{com}. 
+. bysort phys_id shift_date hour_id: egen census_fb = sum(patient_under_care_fb)
+{txt}
+{com}. 
+. // end of shift
+. gen end_of_shift = hour_id - hours_of_shift + 4
+{txt}
+{com}. save patients_all.dta, replace
+{txt}{p 0 4 2}
+file {bf}
+patients_all.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. use patients_all.dta, clear
+{txt}
+{com}. qui duplicates drop phys_id shift_date shift_start shift_end end_of_shift, force
+{txt}
+{com}. keep phys_id shift_date shift_start shift_end hour_id ///
+> patient_under_care_lb patient_under_care_ub patient_under_care_fb end_of_shift
+{txt}
+{com}. rename hour_id hour
+{res}{txt}
+{com}. save census.dta, replace
+{txt}{p 0 4 2}
+file {bf}
+census.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. use census.dta, clear
+{txt}
+{com}. // How does the census vary with time relative to end of shift
+. bysort end_of_shift: egen sum_patient_under_care_fb = sum(patient_under_care_fb)
+{txt}
+{com}. bysort end_of_shift: egen sum_patient_under_care_lb = sum(patient_under_care_lb)
+{txt}
+{com}. bysort end_of_shift: egen sum_patient_under_care_ub = sum(patient_under_care_ub)
+{txt}
+{com}. 
+. qui duplicates drop end_of_shift, force
+{txt}
+{com}. qui twoway (connected sum_patient_under_care_fb end_of_shift) ///
+> (connected sum_patient_under_care_lb end_of_shift) ///
+> (connected sum_patient_under_care_ub end_of_shift), xline(0, lpattern(dash)) ///
+> ytitle("Census Count") xtitle("Time Relative to End of Shift (Hours)") ///
+> title("Census Variation Relative to End of Shift") xtick(-9(1)4) ///
+> legend(ring(0) pos(11))
+{txt}
+{com}. qui graph export "$Out\Census_Variation.png", replace
+{txt}
+{com}. 
+. //_5
+. *********************Question 4*****************************************
+. use temp.dta, clear
+{txt}
+{com}. 
+. // gen length of stay(seconds)
+. gen double log_length_stay = log((leave_time - arrive_time)/1000)
+{txt}(4 missing values generated)
+
+{com}. 
+. qui reg log_length_stay i.phys_id, r
+{txt}
+{com}. qui coefplot,keep(*.phys_id) title("Coefficient of Physician") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+{txt}
+{com}. qui graph export "$Out\Coef_phys.png", replace
+{txt}
+{com}. 
+. // control pred_lnlos
+. qui reg log_length_stay i.phys_id pred_lnlos, r
+{txt}
+{com}. qui coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for pred_los") baselevels ci vertical ///
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+{txt}
+{com}. qui graph export "$Out\Coef_phys_control.png", replace
+{txt}
+{com}. 
+. 
+. // los versus time to shift
+. use patients_all.dta, clear
+{txt}
+{com}. gen double log_length_stay = log((leave_time - arrive_time)/1000)
+{txt}(52 missing values generated)
+
+{com}. 
+. qui reg log_length_stay i.phys_id##i.hour_id, r
+{txt}
+{com}. qui coefplot,keep(*.phys_id) title("Coefficient of Physician, Controlled for time to shift") baselevels ci vertical /// 
+> label xlabel(, angle(45) labsize(vsmall)) yline(0)
+{txt}
+{com}. 
+. qui graph export "$Out\Interaction_coef.png", replace
+{txt}
+{com}. 
+. //_^
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\huhu\Desktop\Project-template\code\Stata Markdown\markdown.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}17 Feb 2024, 22:31:01
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
